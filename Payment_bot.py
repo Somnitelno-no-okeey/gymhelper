@@ -13,9 +13,11 @@ API_TOKEN = '8012238655:AAEz1H4xz08oC7QebeAQ4Own8NdqQ19TXUQ'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
-def infinite_id_generator():
+def id_generator():
+    inv_id = 1
     while True:
-        yield random.randint(0, 2 ** 63 - 1)
+        yield inv_id
+        inv_id += 1
 
 id_gen = infinite_id_generator()
 
