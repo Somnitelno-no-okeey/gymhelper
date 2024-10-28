@@ -1,5 +1,6 @@
 import hashlib
 import requests
+import random
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 
@@ -19,12 +20,14 @@ async def start(message: types.Message):
 @dp.message_handler(commands=['pay'])
 async def process_payment(message: types.Message):
     amount = "100.00"  
-    inv_id = "12345"  
-    description = "Оплата услуги"  # Описание платежа
+    description = "Оплата услуги" 
     signature = f"{MERCHANT_LOGIN}:{amount}:{inv_id}:{PASSWORD_1}"  
     crc = hashlib.md5(signature.encode()).hexdigest()  
 
-    # Cсылка на оплату
+def infinite_id_generator():
+    while True:
+        yield random.randint(0, 2**63 - 1) 
+        
     payment_link = (
         f"{PAYMENT_URL}?MerchantLogin={MERCHANT_LOGIN}"
         f"&OutSum={amount}&InvId={inv_id}&Description={description}"
@@ -33,6 +36,5 @@ async def process_payment(message: types.Message):
 
     await message.answer(f"Для оплаты перейдите по ссылке: {payment_link}")
 
-# Запуск бота
 if name == '__main__':
     executor.start_polling(dp, skip_updates=True)
