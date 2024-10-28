@@ -5,13 +5,20 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 
 # Данные для Robokassa
-MERCHANT_LOGIN = 'MERCHANT_LOGIN'  # Пример 
-PASSWORD_1 = 'ПАРОЛЬ_1'  # Указан пример(Как только пройду регистрацию на robokassa заменю данные)
-PAYMENT_URL = 'https://auth.robokassa.ru/Merchant/Index.aspx'  
+MERCHANT_LOGIN = 'MERCHANT_LOGIN'  # Пример
+PASSWORD_1 = 'ПАРОЛЬ_1'  # Пример (замените на актуальные данные после регистрации)
+PAYMENT_URL = 'https://auth.robokassa.ru/Merchant/Index.aspx'
 
-API_TOKEN = '8012238655:AAEz1H4xz08oC7QebeAQ4Own8NdqQ19TXUQ'  
+API_TOKEN = '8012238655:AAEz1H4xz08oC7QebeAQ4Own8NdqQ19TXUQ'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
+
+def infinite_id_generator():
+    while True:
+        yield random.randint(0, 2 ** 63 - 1)
+
+id_gen = infinite_id_generator()
+
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
@@ -19,19 +26,18 @@ async def start(message: types.Message):
 
 @dp.message_handler(commands=['pay'])
 async def process_payment(message: types.Message):
-    amount = "100.00"  
-    description = "Оплата услуги" 
-    signature = f"{MERCHANT_LOGIN}:{amount}:{inv_id}:{PASSWORD_1}"  
-    crc = hashlib.md5(signature.encode()).hexdigest()  
+    amount = "100.00"
+    description = "Оплата услуги"
 
-def infinite_id_generator():
-    while True:
-        yield random.randint(0, 2**63 - 1) 
-        
+    inv_id = next(id_gen)
+
+    signature = f"{MERCHANT_LOGIN}:{amount}:{inv_id}:{PASSWORD_1}"
+    crc = hashlib.md5(signature.encode()).hexdigest()
+
     payment_link = (
         f"{PAYMENT_URL}?MerchantLogin={MERCHANT_LOGIN}"
         f"&OutSum={amount}&InvId={inv_id}&Description={description}"
-        f"&SignatureValue={crc}&IsTest=1"  
+        f"&SignatureValue={crc}&IsTest=1"
     )
 
     await message.answer(f"Для оплаты перейдите по ссылке: {payment_link}")
