@@ -1,0 +1,36 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    <h1>Profile</h1>
+    
+    <div>
+        <label for="name">Имя:</label>
+        <span id="name">{{ name }}</span>
+    </div>
+    
+    <div>
+        <label for="email">Почта:</label>
+        <span id="email">{{ email }}</span>
+    </div>
+    
+    <div>
+        <label>Фото:</label>
+        <img src="{% static 'img\images.jpg' %}" alt="Profile Photo" width="150">
+    </div>
+    
+    <div>
+        <a href="/configurator">Ссылка на конфигуратор</a>
+    </div>
+    
+    <div>
+        <a href="{% url 'logout' %}">Выйти</a>
+    </div>
+</body>
+</html>

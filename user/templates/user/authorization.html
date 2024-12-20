@@ -1,0 +1,58 @@
+{% load static %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gymhelper | Авторизация</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <main class="authorization">
+        <div class="wrapper">
+            <div class="welcome-wrapper">
+                <div class="welcome-container">
+                    <h1 class="welcome">Здравствуйте!</h1>
+                    <p class="text" data-stage="enter">
+                        Пожалуйста, войдите в систему, указав свои персональные данные
+                    </p>
+                    <button class="authorization-button">
+                        <span class="button-content" data-stage="enter">Войти</span>
+                    </button>
+                </div>
+            </div>
+            <div class="authorization-wrapper">
+                <div class="authorization-container">
+                    <h1 class="logo">GYMHELPER</h1>
+                        <p class="description">Тренируйся умнее, а не усерднее – с нашим 
+                            интеллектуальным помощником!</p>
+                    <form action="{% url 'auth' %}" method="post" class="registration-form active" autocomplete="off">
+                        {% csrf_token %}
+                        <input type="text" name="name" class="authorization-field" placeholder="Имя" required>
+                        <input type="email" name="email" class="authorization-field" placeholder="Почта" required>
+                        <input type="password" name="password" class="authorization-field" placeholder="Пароль" required>
+                        <button type="submit" name="registration-button" class="registration-button">Зарегистрироваться</button>
+                    </form>
+                    <form action="{% url 'auth' %}" method="post" class="login-form hidden" autocomplete="off">
+                        {% csrf_token %}
+                        <input type="email" name="email" class="authorization-field" placeholder="Почта" required>
+                        <input type="password" name="password" class="authorization-field" placeholder="Пароль" required>
+                        <button type="submit" name="enter-button" class="enter-button">Войти</button>
+                        <div class="link-register-container">
+                            <p class="register">Зарегистрируйтесь через</p>
+                            <a href="{% provider_login_url 'google' %}" class="link-register">Google</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="{% static 'js/authorization.js'%}"></script>
+    </main>
+</body>
+</html>
